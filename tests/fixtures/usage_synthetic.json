@@ -1,0 +1,12 @@
+{
+  "usages": [
+    {
+      "subscriptionId": "synthetic-line-a",
+      "balances": {
+        "nationalData": {"balance": {"value": 50}, "usage": 12.5},
+        "nationalCalls": {"balance": {"value": 1000, "unit": "min"}, "usage": 25},
+        "nationalSms": {"balance": {"value": "unlimited", "unit": "messages"}, "usage": 4}
+      }
+    }
+  ]
+}

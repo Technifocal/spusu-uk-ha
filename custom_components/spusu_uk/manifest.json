@@ -1,0 +1,17 @@
+{
+  "after_dependencies": [
+    "imap"
+  ],
+  "codeowners": [
+    "@Technifocal"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/Technifocal/spusu-uk-ha",
+  "domain": "spusu_uk",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/Technifocal/spusu-uk-ha/issues",
+  "name": "Spusu UK",
+  "requirements": [],
+  "version": "0.1.1"
+}

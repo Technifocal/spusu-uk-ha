@@ -1,0 +1,166 @@
+{
+  "captured_at": "2026-10-06T16:18:29.595402+00:00",
+  "method": "GET",
+  "path": "/imoscmsapi/customerarea/usage",
+  "live": true,
+  "status": 200,
+  "content_type": "application/json",
+  "body": {
+    "usages": [
+      {
+        "productKey": "redacted-1",
+        "billPeriodStart": "redacted-2",
+        "billPeriodEnd": "redacted-3",
+        "balances": {
+          "nationalData": {
+            "usage": 0,
+            "balance": {
+              "balanceCfgId": 100004,
+              "unitType": "redacted-5",
+              "unlimited": false,
+              "value": 1.0,
+              "customizable": false,
+              "pricePerExtraUnit": {
+                "amount": 4.0,
+                "currencyCode": "redacted-6"
+              }
+            }
+          },
+          "nationalVoice": {
+            "usage": 0,
+            "balance": {
+              "unitType": "redacted-7",
+              "unlimited": true,
+              "customizable": false
+            }
+          },
+          "nationalSMS": {
+            "usage": 0,
+            "balance": {
+              "balanceCfgId": 100008,
+              "unitType": "redacted-9",
+              "unlimited": true,
+              "customizable": false
+            }
+          },
+          "euRoamingData": {
+            "usage": 0,
+            "balance": {
+              "balanceCfgId": 100010,
+              "unitType": "redacted-5",
+              "unlimited": false,
+              "value": 1.0,
+              "customizable": false
+            }
+          },
+          "euRoamingVoice": {
+            "usage": 0,
+            "balance": {
+              "balanceCfgId": 100011,
+              "unitType": "redacted-7",
+              "unlimited": false,
+              "value": 500,
+              "customizable": false
+            }
+          },
+          "euRoamingSMS": {
+            "usage": 0,
+            "balance": {
+              "balanceCfgId": 100012,
+              "unitType": "redacted-9",
+              "unlimited": false,
+              "value": 500,
+              "customizable": false
+            }
+          },
+          "euInternationalVoice": {
+            "usage": 0,
+            "balance": {
+              "balanceCfgId": 100013,
+              "unitType": "redacted-7",
+              "unlimited": false,
+              "value": 500,
+              "customizable": false
+            }
+          },
+          "costLimitNationalData": {
+            "usage": 0,
+            "balance": {
+              "balanceCfgId": 100014,
+              "unitType": "redacted-15",
+              "unlimited": false,
+              "value": 0.0,
+              "customizable": true,
+              "maxValue": 100.0
+            }
+          },
+          "costLimitNationalVoiceAndSMS": {
+            "usage": 0,
+            "customLimitNextMonth": 1.0,
+            "customLimitCurrentMonth": 1.0,
+            "balance": {
+              "balanceCfgId": 100016,
+              "unitType": "redacted-15",
+              "unlimited": false,
+              "value": 10.0,
+              "customizable": true,
+              "maxValue": 100.0
+            }
+          },
+          "costLimitRoamingData": {
+            "usage": 0,
+            "customLimitNextMonth": 0.0,
+            "customLimitCurrentMonth": 0.0,
+            "balance": {
+              "balanceCfgId": 100017,
+              "unitType": "redacted-15",
+              "unlimited": false,
+              "value": 10.0,
+              "customizable": true,
+              "maxValue": 100.0
+            }
+          },
+          "costLimitRoamingVoiceAndSMS": {
+            "usage": 0,
+            "balance": {
+              "balanceCfgId": 100018,
+              "unitType": "redacted-15",
+              "unlimited": false,
+              "value": 10.0,
+              "customizable": true,
+              "maxValue": 100.0
+            }
+          },
+          "costLimitInternationalVoiceAndSMS": {
+            "usage": 0,
+            "customLimitNextMonth": 1.0,
+            "customLimitCurrentMonth": 1.0,
+            "balance": {
+              "balanceCfgId": 100019,
+              "unitType": "redacted-15",
+              "unlimited": false,
+              "value": 10.0,
+              "customizable": true,
+              "maxValue": 100.0
+            }
+          }
+        },
+        "services": []
+      }
+    ]
+  },
+  "cookies": {
+    "JSESSIONID": {
+      "value": "[REDACTED]",
+      "path": "/",
+      "secure": true,
+      "httponly": true
+    },
+    "mrsroute": {
+      "value": "[REDACTED]",
+      "path": "/",
+      "secure": true,
+      "httponly": true
+    }
+  }
+}

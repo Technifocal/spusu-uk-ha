@@ -1,0 +1,40 @@
+I have this authentication flow with Spusu to get user data:
+
+curl 'https://www.spusu.co.uk/imoscmsapi/authentication/onetimelink/email' --data '{"phoneNumberOrCustomerNumber": "+redacted"}' --header 'Content-Type: application/json'
+
+Email -> Token from URL (example: `https://www.spusu.co.uk/login?token=redacted`)
+
+curl 'https://www.spusu.co.uk/imoscmsapi/authentication/login/token/' --data '{"token": "redacted"}' --header 'Content-Type: application/json'
+
+Sets cookie:
+set-cookie: JSESSIONID=redacted; Path=/; Secure; HttpOnly
+
+Finally:
+
+https://www.spusu.co.uk/imoscmsapi/customerarea/usage -> with JSESSIONID cookie from above make this available in HA:
+
+
+resource: "https://www.spusu.co.uk/imoscmsapi/customerarea/usage"
+    method: GET
+    headers:
+      Cookie: "JSESSIONID=token"
+    scan_interval: 900
+    sensor:
+      - name: "Spusu - Data Remaining"
+        unique_id: spusu_data_remaining
+        value_template: "{{ value_json.usages[0].balances.nationalData.balance.value - value_json.usages[0].balances.nationalData.usage }}"
+        unit_of_measurement: "GB"
+        device_class: data_size
+        state_class: measurement
+      - name: "Spusu - Data Allowance"
+        unique_id: spusu_data_allowance
+        value_template: "{{ value_json.usages[0].balances.nationalData.balance.value }}"
+        unit_of_measurement: "GB"
+        device_class: data_size
+        state_class: measurement
+      - name: "Spusu - Data Usage"
+        unique_id: spusu_data_allowance
+        value_template: "{{ value_json.usages[0].balances.nationalData.usage }}"
+        unit_of_measurement: "GB"
+        device_class: data_size
+        state_class: measurement

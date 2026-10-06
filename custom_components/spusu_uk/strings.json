@@ -1,0 +1,35 @@
+{
+  "title": "Spusu UK",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect Spusu UK",
+        "description": "Select an existing IMAP entry configured to provide the Spusu token or login URL in its custom event field. Spusu does not read email bodies. Submitting requests one login email.",
+        "data": {"account": "Phone number or customer number", "imap_entry_id": "IMAP integration"}
+      },
+      "reauth_confirm": {
+        "title": "Reconnect Spusu UK",
+        "description": "Check the IMAP token handoff, then submit to request one new login email.",
+        "data": {"imap_entry_id": "IMAP integration"}
+      },
+      "retry": {
+        "title": "Login could not complete",
+        "description": "Check Spusu connectivity and the IMAP custom event field. Submit to request another login email."
+      }
+    },
+    "progress": {"waiting_for_token": "Waiting for a fresh Spusu token from IMAP, then validating usage. This can take up to five minutes."},
+    "error": {
+      "invalid_account": "Enter a phone number or customer number without spaces.",
+      "invalid_imap": "Select an existing IMAP integration.",
+      "token_timeout": "No fresh token arrived within five minutes. Check IMAP sender, subject, and custom event data.",
+      "invalid_token": "Spusu rejected the supplied token.",
+      "invalid_response": "Spusu returned an unsupported usage response.",
+      "cannot_connect": "Unable to contact Spusu.",
+      "authentication_failed": "Spusu authentication failed."
+    },
+    "abort": {
+      "already_configured": "This account is already configured.",
+      "reauth_successful": "Spusu reauthentication completed."
+    }
+  }
+}

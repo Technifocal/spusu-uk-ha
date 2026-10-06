@@ -1,0 +1,20 @@
+{
+  "captured_at": "2026-10-06T16:18:29+00:00",
+  "live_api_requests": {
+    "email": 1,
+    "login_token": 1,
+    "usage": 1
+  },
+  "original_sanitized_envelope": "live_usage_response.json",
+  "replay_fixture": "usage_live.json",
+  "redaction": "Personal identifiers, dates, tokens and cookie values are replaced. Allowance and usage numbers are preserved.",
+  "unit_metadata": "The initial sanitizer over-redacted unitType and currencyCode. Public unit enums are restored in the replay fixture using the vendor public client and UK contract summary; they are not a second account capture.",
+  "public_unit_enum_source": "https://www.spusu.co.uk/imoscmsV2542962/assets/store.DXBAsRVT.js",
+  "public_unit_enum": {
+    "Minute": "MINUTE",
+    "SMS": "SMS",
+    "GB": "GB",
+    "Money": "MONEY"
+  },
+  "currency_source": "https://www.spusu.co.uk/imoscmsapi/tariffs/6017/summary/"
+}
