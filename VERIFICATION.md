@@ -39,7 +39,7 @@ fixtures instead of requesting new emails or contacting the live Spusu account.
 
 ## Offline checks
 
-- Automated tests: **80 passed**.
+- Automated tests: **81 passed**.
 - Recorded response replay, category coverage, public unit enum mapping, custom
   spending caps including zero, unlimited allowances, and stable product identifiers: passed.
 - Actual Home Assistant sensor loading with both synthetic and live-derived fixtures,
@@ -56,3 +56,18 @@ The user supplied the token directly. The user's IMAP installation was not acces
 or changed, and the complete automatic IMAP delivery path has not been exercised
 live. Expired/invalid sessions, renewal, outages, and multiple subscriptions remain
 mocked test scenarios rather than additional real account requests.
+
+## Setup dialog compatibility fix (0.1.2)
+
+On Home Assistant Core 2026.9.4, the initial setup dialog was reproduced as blank.
+The browser reported `Selector config_entry not supported in initial form data`.
+The IMAP selector now supplies an explicit empty default, so the frontend does
+not try to infer an unsupported initial value. Reauthentication already supplies
+a default. No additional Spusu API calls were made during this investigation.
+
+The exact `computeInitialHaFormData` and selector initializer from frontend tag
+20260826.7 were executed locally: the original schema throws the reported error,
+and the corrected schema initializes both account and IMAP fields successfully.
+A regression test checks the serialized form schema, including the empty default.
+The corrected dialog still needs confirmation after installation on the user's
+Home Assistant instance; local initializer validation is not a full browser test.

@@ -3,6 +3,8 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from homeassistant.data_entry_flow import AbortFlow, FlowResultType
+from homeassistant.helpers import config_validation as cv
+from probatio import to_field_list
 
 from custom_components.spusu_uk.api import (
     ConnectionFailure,
@@ -119,3 +121,21 @@ async def test_reauth_updates_existing_entry(hass, entry, imap_entry):
         result = await flow.async_step_finish()
     assert result["reason"] == "reauth_successful"
     update.assert_called_once_with(entry, data_updates=flow._data)
+
+
+async def test_user_form_serialized_initial_imap_value(hass):
+    """HA's frontend needs a default for an unsupported selector initializer."""
+    result = await flow_for(hass).async_step_user()
+    fields = to_field_list(
+        result["data_schema"], custom_serializer=cv.custom_serializer
+    )
+    account, imap = fields
+    assert account["name"] == "account"
+    assert account["type"] == "string"
+    assert imap["name"] == "imap_entry_id"
+    assert imap["required"] is True
+    assert imap["selector"] == {"config_entry": {"integration": "imap"}}
+    # computeInitialHaFormData uses this before its selector initializer, which
+    # throws for config_entry in frontend 20260826.7 (HA Core 2026.9.4).
+    assert "default" in imap
+    assert imap["default"] == ""

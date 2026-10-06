@@ -52,7 +52,9 @@ class SpusuConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_ACCOUNT): str,
-                    vol.Required(CONF_IMAP_ENTRY): ConfigEntrySelector(
+                    # HA 2026.9's frontend cannot infer an initial value for
+                    # config_entry selectors; an explicit empty default renders it.
+                    vol.Required(CONF_IMAP_ENTRY, default=""): ConfigEntrySelector(
                         ConfigEntrySelectorConfig(integration="imap")
                     ),
                 }
