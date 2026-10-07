@@ -1,11 +1,12 @@
 """Spusu UK custom integration."""
 
+from aiohttp import DummyCookieJar
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryError
 from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import SpusuClient
 from .auth import ImapTokenReceiver
@@ -28,7 +29,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     imap = hass.config_entries.async_get_entry(entry.data[CONF_IMAP_ENTRY])
     if imap is None or imap.domain != "imap":
         raise ConfigEntryError("Selected IMAP integration no longer exists")
-    client = SpusuClient(async_get_clientsession(hass), entry.data.get(CONF_SESSION))
+    client = SpusuClient(
+        async_create_clientsession(hass, cookie_jar=DummyCookieJar()),
+        entry.data.get(CONF_SESSION),
+    )
     coordinator = SpusuCoordinator(
         hass, entry, client, get_receiver(hass, imap.entry_id)
     )

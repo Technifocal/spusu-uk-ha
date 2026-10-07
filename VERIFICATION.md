@@ -1,7 +1,7 @@
 # Verification
 
 Checked on 2026-10-06 against Home Assistant Core 2026.9.4 and Python 3.14.
-Integration version: **0.1.1**.
+Initial API capture version: **0.1.1**. Current integration version: **0.1.3**.
 
 ## Actual Spusu API calls
 
@@ -71,3 +71,14 @@ and the corrected schema initializes both account and IMAP fields successfully.
 A regression test checks the serialized form schema, including the empty default.
 The corrected dialog still needs confirmation after installation on the user's
 Home Assistant instance; local initializer validation is not a full browser test.
+
+## Installed Home Assistant checks (2026-10-06)
+
+- Confirmed the setup form renders on the user's Home Assistant 2026.9.4.
+- Confirmed built-in IMAP delivers a fresh standalone login URL in `custom`, with the expected sender, subject, and selected entry. Spusu reads no email body.
+- Installed cookie isolation and sanitized HTTP-status diagnostics, and restarted Home Assistant successfully.
+- The fresh login exchange still returned HTTP 401. End-to-end authentication and sensor creation remain unverified in this installed instance; a competing one-use-token consumer has not been confirmed.
+- No private event payload, token, session cookie, account number, or mailbox details were saved as fixtures.
+- All 84 mocked tests pass. Added coverage checks disabled cookie storage and authentication-session cleanup on success, rejection, and cancellation.
+
+The original single live API capture above is retained for replay. These later, explicitly requested setup-debugging attempts are separate from that initial capture.

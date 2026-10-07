@@ -1,11 +1,13 @@
 """UI setup and reauthentication through existing IMAP events."""
 
 import asyncio
+import logging
 from typing import Any
 
 import voluptuous as vol
+from aiohttp import DummyCookieJar
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from homeassistant.helpers.selector import (
     ConfigEntrySelector,
     ConfigEntrySelectorConfig,
@@ -22,6 +24,8 @@ from .api import (
 from .auth import TokenTimeout
 from .const import CONF_ACCOUNT, CONF_IMAP_ENTRY, CONF_SESSION, DOMAIN
 from .models import parse_usage
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class SpusuConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -96,7 +100,11 @@ class SpusuConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
     async def _authenticate(self) -> None:
-        client = SpusuClient(async_get_clientsession(self.hass))
+        client = SpusuClient(
+            async_create_clientsession(
+                self.hass, cookie_jar=DummyCookieJar(), auto_cleanup=False
+            )
+        )
         try:
             await get_receiver(self.hass, self._data[CONF_IMAP_ENTRY]).authenticate(
                 client, self._data[CONF_ACCOUNT]
@@ -105,7 +113,8 @@ class SpusuConfigFlow(ConfigFlow, domain=DOMAIN):
             self._data[CONF_SESSION] = client.cookie
         except TokenTimeout:
             self._error = "token_timeout"
-        except InvalidToken:
+        except InvalidToken as err:
+            _LOGGER.warning("Spusu token exchange failed: %s", err)
             self._error = "invalid_token"
         except InvalidResponse:
             self._error = "invalid_response"
@@ -113,6 +122,8 @@ class SpusuConfigFlow(ConfigFlow, domain=DOMAIN):
             self._error = "cannot_connect"
         except SpusuError:
             self._error = "authentication_failed"
+        finally:
+            client.session.detach()
 
     async def async_step_authenticate(
         self, user_input: dict | None = None

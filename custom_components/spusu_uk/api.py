@@ -29,7 +29,7 @@ class InvalidResponse(SpusuError):
 
 
 class SpusuClient:
-    """Use explicit cookies so shared HA sessions cannot mix account cookies."""
+    """Use explicit cookies with a dedicated session and a disabled cookie jar."""
 
     def __init__(
         self, session: aiohttp.ClientSession, cookie: str | None = None
@@ -97,7 +97,9 @@ class SpusuClient:
                     ):
                         raise SessionExpired("Redirected to login")
                 if login and response.status in (400, 401, 403):
-                    raise InvalidToken("Token rejected")
+                    raise InvalidToken(
+                        f"Token exchange returned HTTP {response.status}"
+                    )
                 if not 200 <= response.status < 300:
                     raise ConnectionFailure(f"Spusu HTTP {response.status}")
                 if login:

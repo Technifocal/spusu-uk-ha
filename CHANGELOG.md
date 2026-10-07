@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- Isolate Spusu cookies from Home Assistant’s shared HTTP session and other accounts.
+- Clean up temporary authentication sessions on success, failure, and cancellation.
+- Report token-exchange HTTP status without logging tokens or response bodies.
+
 ## 0.1.2
 
 - Fix the blank initial setup dialog on Home Assistant 2026.9.4 by giving the IMAP selector an explicit initial value.

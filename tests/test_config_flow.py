@@ -2,6 +2,7 @@ import asyncio
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
+from aiohttp import DummyCookieJar
 from homeassistant.data_entry_flow import AbortFlow, FlowResultType
 from homeassistant.helpers import config_validation as cv
 from probatio import to_field_list
@@ -57,7 +58,7 @@ async def test_initial_auth_progress_and_create_entry(hass, imap_entry, client):
         patch(
             "custom_components.spusu_uk.config_flow.SpusuClient", return_value=client
         ),
-        patch("custom_components.spusu_uk.config_flow.async_get_clientsession"),
+        patch("custom_components.spusu_uk.config_flow.async_create_clientsession"),
         patch(
             "custom_components.spusu_uk.config_flow.get_receiver", return_value=receiver
         ),
@@ -94,7 +95,7 @@ async def test_flow_failures_without_automatic_retry(
         patch(
             "custom_components.spusu_uk.config_flow.SpusuClient", return_value=client
         ),
-        patch("custom_components.spusu_uk.config_flow.async_get_clientsession"),
+        patch("custom_components.spusu_uk.config_flow.async_create_clientsession"),
         patch(
             "custom_components.spusu_uk.config_flow.get_receiver", return_value=receiver
         ),
@@ -139,3 +140,34 @@ async def test_user_form_serialized_initial_imap_value(hass):
     # throws for config_entry in frontend 20260826.7 (HA Core 2026.9.4).
     assert "default" in imap
     assert imap["default"] == ""
+
+
+@pytest.mark.parametrize(
+    "error", [None, InvalidToken("HTTP 401"), asyncio.CancelledError()]
+)
+async def test_flow_cookie_isolation_and_cleanup(hass, client, error):
+    flow = flow_for(hass)
+    flow._data = {"account": "test", "imap_entry_id": "imap-test"}
+    receiver = Mock(authenticate=AsyncMock(side_effect=error))
+    with (
+        patch(
+            "custom_components.spusu_uk.config_flow.SpusuClient", return_value=client
+        ),
+        patch(
+            "custom_components.spusu_uk.config_flow.async_create_clientsession"
+        ) as create,
+        patch(
+            "custom_components.spusu_uk.config_flow.get_receiver", return_value=receiver
+        ),
+    ):
+        if isinstance(error, asyncio.CancelledError):
+            with pytest.raises(asyncio.CancelledError):
+                await flow._authenticate()
+        else:
+            await flow._authenticate()
+    jar = create.call_args.kwargs["cookie_jar"]
+    assert isinstance(jar, DummyCookieJar)
+    jar.update_cookies({"JSESSIONID": "foreign-account-session"})
+    assert len(jar) == 0
+    assert create.call_args.kwargs["auto_cleanup"] is False
+    client.session.detach.assert_called_once()

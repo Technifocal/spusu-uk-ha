@@ -22,7 +22,7 @@ async def test_setup_unload_dynamic_sensors_and_diagnostics(
     hass.config_entries.async_unload_platforms = AsyncMock(return_value=True)
     with (
         patch("custom_components.spusu_uk.SpusuClient", return_value=client),
-        patch("custom_components.spusu_uk.async_get_clientsession"),
+        patch("custom_components.spusu_uk.async_create_clientsession"),
     ):
         assert await async_setup_entry(hass, entry)
     coordinator = entry.runtime_data
@@ -81,7 +81,7 @@ async def test_real_home_assistant_loader_and_sensor_states(
     entry._async_set_state(hass, ConfigEntryState.SETUP_IN_PROGRESS, None)
     with (
         patch("custom_components.spusu_uk.SpusuClient", return_value=client),
-        patch("custom_components.spusu_uk.async_get_clientsession"),
+        patch("custom_components.spusu_uk.async_create_clientsession"),
     ):
         async with entry.setup_lock:
             assert await async_setup_entry(hass, entry)
@@ -129,7 +129,7 @@ async def test_real_home_assistant_loader_and_sensor_states(
     entry._async_set_state(hass, ConfigEntryState.SETUP_IN_PROGRESS, None)
     with (
         patch("custom_components.spusu_uk.SpusuClient", return_value=client),
-        patch("custom_components.spusu_uk.async_get_clientsession"),
+        patch("custom_components.spusu_uk.async_create_clientsession"),
     ):
         async with entry.setup_lock:
             assert await async_setup_entry(hass, entry)
